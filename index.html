@@ -1,191 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidsrc Embed</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            background-color: black; /* Set background color to black */
-            color: white; /* Set text color to white for visibility */
-            font-family: Arial, sans-serif;
+// Example of basic validation
+function updateIframe() {
+    if (mode === 'movie') {
+        const newMovieId = document.getElementById('movieIdInput').value.trim();
+        if (newMovieId && /^\d+$/.test(newMovieId)) { // Check if it's a number
+            movieId = newMovieId;
+        } else {
+            alert('Please enter a valid numeric Movie ID.');
+            return;
         }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2em;
+    } else {
+        const newSeriesId = document.getElementById('seriesIdInput').value.trim();
+        const newSeason = document.getElementById('seasonInput').value.trim();
+        const newEpisode = document.getElementById('episodeInput').value.trim();
+        if (newSeriesId && /^\d+$/.test(newSeriesId)) {
+            seriesId = newSeriesId;
+        } else {
+            alert('Please enter a valid numeric Series ID.');
+            return;
         }
-        h1 span {
-            color: #56F10B; /* Green color for "Hub" */
+        if (newSeason && /^\d+$/.test(newSeason)) {
+            season = newSeason;
+        } else {
+            alert('Please enter a valid numeric Season number.');
+            return;
         }
-        iframe {
-            width: 100%;
-            height: 100vh; /* Adjust height for the iframe */
-            border: none;
-            margin-bottom: 20px;
+        if (newEpisode && /^\d+$/.test(newEpisode)) {
+            episode = newEpisode;
+        } else {
+            alert('Please enter a valid numeric Episode number.');
+            return;
         }
-        input {
-            padding: 10px;
-            background-color: #333; /* Darker input field */
-            color: white; /* White text in input */
-            border: 1px solid #555; /* Border color */
-            border-radius: 5px; /* Add rounded corners */
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            background-color: #379808; /* Change to your desired button color */
-            color: white; /* Button text color */
-            border: none; /* No border */
-            cursor: pointer; /* Pointer cursor */
-            border-radius: 5px; /* Add rounded corners */
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #2C7D05; /* Darker color on hover */
-        }
-        .btn-container {
-            margin-bottom: 20px;
-        }
-        /* Container for Movie Inputs */
-        #movieInputs {
-            display: flex;
-            flex-direction: column; /* Stack inputs vertically */
-            align-items: center;
-            width: 80%;
-            margin-bottom: 10px;
-        }
-        /* Container for Series Inputs */
-        #seriesInputs {
-            display: none; /* Hidden by default */
-            flex-direction: row; /* Arrange inputs in a row */
-            gap: 10px; /* Space between input fields */
-            justify-content: center; /* Center the inputs horizontally */
-            align-items: center; /* Align inputs vertically */
-            width: 80%;
-            margin-bottom: 10px;
-        }
-        /* Responsive Design for Smaller Screens */
-        @media (max-width: 600px) {
-            #seriesInputs {
-                flex-direction: column; /* Stack inputs vertically on small screens */
-                gap: 5px;
-            }
-            
-            input {
-                width: 80%; /* Adjust width for smaller screens */
-            }
-            
-            iframe {
-                width: 95%;
-            }
-        }
-        /* Ensure all series inputs have equal width */
-        #seriesInputs input {
-            flex: 1; /* Makes all inputs take equal space */
-            min-width: 100px; /* Ensures inputs don't get too small */
-        }
-    </style>
-</head>
-<body>
-    
-    <h1>Movie <span>Hub</span></h1>
-
-    <div class="btn-container">
-        <button onclick="setMovieMode()">Movie</button>
-        <button onclick="setSeriesMode()">Series</button>
-    </div>
-
-    <iframe id="videoFrame" src="https://vidsrc.pro/embed/movie/872585" allowfullscreen></iframe>
-
-    <!-- Movie Inputs Container -->
-    <div id="movieInputs">
-        <input type="text" id="movieIdInput" placeholder="Enter Movie ID" />
-    </div>
-
-    <!-- Series Inputs Container -->
-    <div id="seriesInputs">
-        <input type="text" id="seriesIdInput" placeholder="Enter Series ID" />
-        <input type="text" id="seasonInput" placeholder="Enter Season" />
-        <input type="text" id="episodeInput" placeholder="Enter Episode" />
-    </div>
-
-    <button onclick="updateIframe()">Update Video</button>
-
-    <script>
-        // Define separate IDs for movie and series
-        let movieId = '872585';   // Default Movie ID
-        let seriesId = '61889';   // Default Series ID
-        let season = '1';         // Default Season
-        let episode = '1';        // Default Episode
-
-        let mode = 'movie'; // Default mode
-
-        // Function to set Movie mode
-        function setMovieMode() {
-            mode = 'movie';
-            document.getElementById('seriesInputs').style.display = 'none'; // Hide Series Inputs
-            document.getElementById('movieInputs').style.display = 'flex';  // Show Movie Inputs
-            document.getElementById('movieIdInput').value = movieId; // Set to current movieId
-            updateIframeSrc();
-        }
-
-        // Function to set Series mode
-        function setSeriesMode() {
-            mode = 'series';
-            document.getElementById('movieInputs').style.display = 'none'; // Hide Movie Inputs
-            document.getElementById('seriesInputs').style.display = 'flex'; // Show Series Inputs
-            document.getElementById('seriesIdInput').value = seriesId; // Set to current seriesId
-            document.getElementById('seasonInput').value = season;
-            document.getElementById('episodeInput').value = episode;
-            updateIframeSrc();
-        }
-
-        // Function to update the iframe source based on current mode and IDs
-        function updateIframeSrc() {
-            if (mode === 'movie') {
-                document.getElementById('videoFrame').src = `https://vidsrc.pro/embed/movie/${movieId}`;
-            } else {
-                document.getElementById('videoFrame').src = `https://vidsrc.pro/embed/tv/${seriesId}/${season}/${episode}`;
-            }
-        }
-
-        // Function to handle updating the iframe when the user clicks "Update Video"
-        function updateIframe() {
-            if (mode === 'movie') {
-                const newMovieId = document.getElementById('movieIdInput').value.trim();
-                if (newMovieId) { // Only update if the input is not empty
-                    movieId = newMovieId;
-                }
-            } else {
-                const newSeriesId = document.getElementById('seriesIdInput').value.trim();
-                const newSeason = document.getElementById('seasonInput').value.trim();
-                const newEpisode = document.getElementById('episodeInput').value.trim();
-                if (newSeriesId) { // Only update if the input is not empty
-                    seriesId = newSeriesId;
-                }
-                if (newSeason) {
-                    season = newSeason;
-                }
-                if (newEpisode) {
-                    episode = newEpisode;
-                }
-            }
-            updateIframeSrc();
-        }
-
-        // Set initial values on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            setMovieMode(); // Initialize in Movie mode
-        });
-    </script>
-</body>
-</html>
+    }
+    updateIframeSrc();
+}
